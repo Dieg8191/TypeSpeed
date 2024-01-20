@@ -1,7 +1,7 @@
 from pygame.font import Font, init
 init()
 
-VERSION = "0.0.0"
+VERSION = "0.0.1"
 FPS = 60
 SCREEN_SIZE = (800, 600)
 

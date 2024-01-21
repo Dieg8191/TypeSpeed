@@ -1,4 +1,4 @@
-from files.game import Game
+from files.game.mainGame import Game
 from files.menu import Menu
 from config import SCREEN_SIZE, VERSION
 from ctypes import WinDLL

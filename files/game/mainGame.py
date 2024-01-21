@@ -55,4 +55,14 @@ class Game:
 
             self.timer()
 
+            show_text(self.display,
+                      (10, 60),
+                      "arial",
+                      25,
+                      "black",
+                      None,
+                      f"FPS: {int(self.clock.get_fps())}"
+                      )
+
+
             pygame.display.flip()

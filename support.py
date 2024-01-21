@@ -21,3 +21,12 @@ def get_texts(pack: str) -> list[str, ...]:
         texts = loads(file.read())
 
     return texts["texts"]
+
+
+class Mouse(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.rect = pygame.rect.Rect(0, 0, 1, 1)
+
+    def update(self):
+        self.rect.x, self.rect.y = pygame.mouse.get_pos()

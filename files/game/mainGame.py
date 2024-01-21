@@ -1,7 +1,7 @@
 from time import time
 import pygame
 from sys import exit
-from support import show_text
+from support import show_text, Mouse
 from config import FPS
 
 
@@ -9,6 +9,8 @@ class Game:
     def __init__(self, display: pygame.surface.Surface, clock: pygame.time.Clock) -> None:
         self.display = display
         self.clock = clock
+
+        self.mouse = Mouse()
 
         self.timer_start = time()
         self.paused = False
@@ -53,7 +55,7 @@ class Game:
                                   80,
                                   "black",
                                   None,
-                                  "Paused"
+                                  "Paused (Escape to unpause)"
                                   )
 
                     if not self.paused:
@@ -84,4 +86,5 @@ class Game:
                           f"FPS: {int(self.clock.get_fps())}"
                           )
 
+            self.mouse.update()
             pygame.display.flip()

@@ -11,6 +11,12 @@ class Game:
         self.clock = clock
 
         self.timer_start = time()
+        self.paused = False
+
+        self.pause_surface = pygame.surface.Surface(self.display.get_size())
+        self.pause_surface.fill("black")
+        self.pause_surface.set_alpha(80)
+        self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
 
     def timer(self) -> None:
         seconds = time() - self.timer_start
@@ -38,31 +44,44 @@ class Game:
                     keys = pygame.key.get_pressed()
                     key = pygame.key.name(event.key)
 
-                    if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
-                        self.key_input = key.upper()
+                    if keys[pygame.K_ESCAPE]:
+                        self.paused = not self.paused
+                        self.display.blit(self.pause_surface, self.pause_rect)
+                        show_text(self.display,
+                                  (100, 100),
+                                  "arial",
+                                  80,
+                                  "black",
+                                  None,
+                                  "Paused"
+                                  )
 
-                    elif keys[pygame.K_SPACE]:
-                        self.key_input = " "
+                    if not self.paused:
+                        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                            self.key_input = key.upper()
 
-                    else:
-                        self.key_input = key
+                        elif keys[pygame.K_SPACE]:
+                            self.key_input = " "
 
-            self.display.fill("white")
+                        else:
+                            self.key_input = key
+
             self.clock.tick(FPS)
 
-            if self.key_input and len(self.key_input) == 1:
-                print(self.key_input)
+            if not self.paused:
+                self.display.fill("white")
+                if self.key_input and len(self.key_input) == 1:
+                    print(self.key_input)
 
-            self.timer()
+                self.timer()
 
-            show_text(self.display,
-                      (10, 60),
-                      "arial",
-                      25,
-                      "black",
-                      None,
-                      f"FPS: {int(self.clock.get_fps())}"
-                      )
-
+                show_text(self.display,
+                          (10, 60),
+                          "arial",
+                          25,
+                          "black",
+                          None,
+                          f"FPS: {int(self.clock.get_fps())}"
+                          )
 
             pygame.display.flip()

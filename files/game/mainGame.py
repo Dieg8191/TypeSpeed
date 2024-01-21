@@ -2,7 +2,8 @@ from time import time
 import pygame
 from sys import exit
 from support import show_text, Mouse
-from config import FPS
+from config import FPS, FONTS
+from files.game.text import Board
 
 
 class Game:
@@ -19,6 +20,8 @@ class Game:
         self.pause_surface.fill("black")
         self.pause_surface.set_alpha(80)
         self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
+
+        self.board = Board("Hola mundo")
 
     def timer(self) -> None:
         seconds = time() - self.timer_start
@@ -65,6 +68,9 @@ class Game:
                         elif keys[pygame.K_SPACE]:
                             self.key_input = " "
 
+                        elif keys[pygame.K_BACKSPACE]:
+                            self.key_input = "<"
+
                         else:
                             self.key_input = key
 
@@ -73,7 +79,8 @@ class Game:
             if not self.paused:
                 self.display.fill("white")
                 if self.key_input and len(self.key_input) == 1:
-                    print(self.key_input)
+                    #print(self.key_input)
+                    self.board.input(self.key_input)
 
                 self.timer()
 
@@ -85,6 +92,8 @@ class Game:
                           None,
                           f"FPS: {int(self.clock.get_fps())}"
                           )
+
+                self.board.update()
 
             self.mouse.update()
             pygame.display.flip()

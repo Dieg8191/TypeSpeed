@@ -1,4 +1,4 @@
-VERSION = "0.0.2"
+VERSION = "0.1.0"
 FPS = 60
 SCREEN_SIZE = (1280, 800)
 

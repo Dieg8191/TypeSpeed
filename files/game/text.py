@@ -9,6 +9,7 @@ class Letter(pygame.sprite.Sprite):
 
         self.letter = letter
         font = pygame.font.Font(FONTS["arial"], font_size)
+        self.index = 1
         self.sprites = (font.render(letter, True, font_color, "red"),
                         font.render(letter, True, font_color, "white"),
                         font.render(letter, True, font_color, "green"))
@@ -17,6 +18,7 @@ class Letter(pygame.sprite.Sprite):
 
     def update_image(self, index: int) -> None:
         self.image = self.sprites[index]
+        self.index = index
 
     def update(self) -> None:
         pass
@@ -41,16 +43,17 @@ class Board:
 
         self.index = 0
 
-    def input(self, input: str) -> None:
-        if input == self.letters[self.index].letter:
+    def input(self, key: str) -> None:
+        if key == self.letters[self.index].letter:
             self.letters[self.index].update_image(2)
             self.index += 1
 
-        elif input == "<":
+        elif key == "<":
+            if self.letters[self.index].index == 1:
+                self.index -= 1
             self.letters[self.index].update_image(1)
-            self.index -= 1
 
-        else:
+        elif self.letters[self.index].index == 1:
             self.letters[self.index].update_image(0)
             self.index += 1
 
@@ -61,8 +64,6 @@ class Board:
             self.index = len(self.letters) - 1
 
         print(self.index)
-
-
 
     def update(self):
         self.sprites.draw(self.display)

@@ -21,7 +21,7 @@ class Game:
         self.pause_surface.set_alpha(80)
         self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
 
-        self.board = Board("Hola mundo")
+        self.board = Board("Sebas is the ugliest person in the wolrd")
 
     def timer(self) -> None:
         seconds = time() - self.timer_start

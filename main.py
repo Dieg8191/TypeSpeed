@@ -1,11 +1,15 @@
 from files.game import Game
 from files.menu import Menu
 from config import SCREEN_SIZE, VERSION
+from ctypes import WinDLL
 import pygame
 
 
 class App:
     def __init__(self) -> None:
+        shcore = WinDLL('shcore')
+        shcore.SetProcessDpiAwareness(1)
+
         pygame.init()
         pygame.display.set_caption(f"Type Speed v{VERSION}")
         self.display = pygame.display.set_mode(SCREEN_SIZE)

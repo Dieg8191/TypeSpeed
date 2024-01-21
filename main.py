@@ -11,6 +11,8 @@ class App:
         shcore.SetProcessDpiAwareness(1)
 
         pygame.init()
+        pygame.font.init()
+
         pygame.display.set_caption(f"Type Speed v{VERSION}")
         self.display = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()

@@ -21,7 +21,7 @@ class App:
         self.menu = Menu(self.display, self.clock)
 
     def run(self) -> None:
-        self.game.run()
+        self.menu.run()
 
 
 if __name__ == '__main__':

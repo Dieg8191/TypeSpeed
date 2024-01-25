@@ -23,6 +23,10 @@ def get_texts(pack: str) -> list[str, ...]:
     return texts["texts"]
 
 
+def load_image(filename: str) -> pygame.surface.Surface:
+    return pygame.image.load(filename).convert_alpha()
+
+
 class Mouse(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
@@ -39,3 +43,5 @@ class Tile(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = image
         self.rect = self.image.get_rect(topleft=pos)
+
+

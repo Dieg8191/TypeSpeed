@@ -1,6 +1,6 @@
-VERSION = "0.1.0"
-FPS = 6000
-SCREEN_SIZE = (1280, 800)
+VERSION = "0.2.0"
+FPS = 60
+SCREEN_SIZE = (1280, 720)
 
 font_root = "assets/fonts/"
 FONTS = {

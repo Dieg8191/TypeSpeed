@@ -1,5 +1,6 @@
 import pygame
 from config import SCREEN_SIZE, FONTS
+from support import Tile
 
 
 class Letter(pygame.sprite.Sprite):
@@ -19,15 +20,6 @@ class Letter(pygame.sprite.Sprite):
     def update_image(self, index: int) -> None:
         self.image = self.sprites[index]
         self.index = index
-
-
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, image: pygame.surface.Surface, pos: tuple[int, int],
-                 groups: pygame.sprite.AbstractGroup) -> None:
-
-        super().__init__(groups)
-        self.image = image
-        self.rect = self.image.get_rect(topleft=pos)
 
 
 class Board:
@@ -109,6 +101,6 @@ class Board:
         else:
             self.update_cursor()
 
-    def update(self):
+    def update(self) -> None:
         self.sprites.draw(self.display)
         self.display.blit(self.cursor_surface, self.cursor_rect)

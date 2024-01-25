@@ -3,7 +3,7 @@ import pygame
 from sys import exit
 from support import show_text, Mouse
 from config import FPS
-from files.game.text import Board
+from files.game.gui import Board
 
 
 class Game:

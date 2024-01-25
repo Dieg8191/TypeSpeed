@@ -24,9 +24,18 @@ def get_texts(pack: str) -> list[str, ...]:
 
 
 class Mouse(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.rect = pygame.rect.Rect(0, 0, 1, 1)
 
-    def update(self):
+    def update(self) -> None:
         self.rect.x, self.rect.y = pygame.mouse.get_pos()
+
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, image: pygame.surface.Surface, pos: tuple[int, int],
+                 groups: pygame.sprite.AbstractGroup) -> None:
+
+        super().__init__(groups)
+        self.image = image
+        self.rect = self.image.get_rect(topleft=pos)

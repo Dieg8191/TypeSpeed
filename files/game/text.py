@@ -11,7 +11,7 @@ class Letter(pygame.sprite.Sprite):
         font = pygame.font.Font(FONTS["comic"], 60)
         self.index = 1
         self.sprites = (font.render(letter, True, font_color, "red"),
-                        font.render(letter, True, font_color, "white"),
+                        font.render(letter, True, font_color),
                         font.render(letter, True, font_color, "green"))
         self.image = self.sprites[1]
         self.rect = self.image.get_rect(topleft=pos)
@@ -20,12 +20,18 @@ class Letter(pygame.sprite.Sprite):
         self.image = self.sprites[index]
         self.index = index
 
-    def update(self) -> None:
-        pass
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, image: pygame.surface.Surface, pos: tuple[int, int],
+                 groups: pygame.sprite.AbstractGroup) -> None:
+
+        super().__init__(groups)
+        self.image = image
+        self.rect = self.image.get_rect(topleft=pos)
 
 
 class Board:
-    def __init__(self, text) -> None:
+    def __init__(self, texts: tuple[str, ...]) -> None:
         x, y = SCREEN_SIZE[0] * .08, SCREEN_SIZE[1] * .08
         self.board = pygame.rect.Rect(x, y, SCREEN_SIZE[0] - (x * 2), SCREEN_SIZE[1] - (y * 1.5))
         self.board_surface = pygame.surface.Surface((self.board.width, self.board.height))
@@ -36,25 +42,41 @@ class Board:
         self.display = pygame.display.get_surface()
         self.sprites = pygame.sprite.Group()
 
-        self.start(text)
+        self.texts = texts
+        self.stage = 0
+        self.max_stage = len(texts)
+        self.next_stage()
 
-    def start(self, text: str) -> None:
-        self.letters = [Letter(text[0], (SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 40, "black")]
-        y = 100
+    def next_stage(self) -> None:
+        if self.stage < self.max_stage:
+            self.sprites.empty()
+            text = self.texts[self.stage]
+            print(text)
 
-        for char in text[1::]:
-            x = self.letters[-1].rect.right
+            self.letters = [Letter(text[0], (SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 40, "black")]
+            y = 100
 
-            if x > SCREEN_SIZE[0] - SCREEN_SIZE[0] * .15 and self.letters[-1].letter == " ":
-                x = SCREEN_SIZE[0] * .10
-                y += self.letters[-1].rect.size[1]
+            for char in text[1::]:
+                x = self.letters[-1].rect.right
 
-            self.letters.append(Letter(char, (x, y), self.sprites,
-                                       "arial", 40, "black"))
+                if x > SCREEN_SIZE[0] - SCREEN_SIZE[0] * .15 and self.letters[-1].letter == " ":
+                    x = SCREEN_SIZE[0] * .10
+                    y += self.letters[-1].rect.size[1]
 
-        self.finished = False
-        self.index = 0
-        self.update_cursor()
+                self.letters.append(Letter(char, (x, y), self.sprites,
+                                           "arial", 40, "black"))
+
+            self.finished = False
+            self.index = 0
+            self.stage += 1
+
+            font = pygame.font.Font(FONTS["arial"], 50)
+            image = font.render(f"{self.stage}/{self.max_stage}", True, "black")
+            Tile(image, (SCREEN_SIZE[0] - 100, 25), self.sprites)
+
+            self.update_cursor()
+        else:
+            print("done")
 
     def update_cursor(self) -> None:
         self.cursor_rect.topleft = self.letters[self.index].rect.bottomleft
@@ -81,8 +103,11 @@ class Board:
             self.index = len(self.letters) - 1
 
         self.finished = all(map(lambda letter: letter.index == 2, self.letters))
-        self.update_cursor()
 
+        if self.finished:
+            self.next_stage()
+        else:
+            self.update_cursor()
 
     def update(self):
         self.sprites.draw(self.display)

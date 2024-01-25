@@ -2,7 +2,7 @@ from time import time
 import pygame
 from sys import exit
 from support import show_text, Mouse
-from config import FPS, FONTS
+from config import FPS
 from files.game.text import Board
 
 
@@ -22,8 +22,7 @@ class Game:
         self.pause_surface.set_alpha(80)
         self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
 
-        self.board = Board("A lone wolf howled in the distance, its haunting melody echoing through the wilderness. The"
-                           "forest embraced the nocturnal symphony, alive with mysterious creatures.")
+        self.board = Board(("a", "Hola", "John"))
 
     def timer(self) -> None:
         seconds = time() - self.time_start - self.time_delay
@@ -89,7 +88,6 @@ class Game:
             if not self.paused:
                 self.display.fill("white")
                 if self.key_input and len(self.key_input) == 1:
-                    print(self.key_input)
                     self.board.input(self.key_input)
 
                 self.timer()

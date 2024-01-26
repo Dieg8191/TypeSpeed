@@ -72,7 +72,7 @@ class Board:
 
     def update_cursor(self) -> None:
         self.cursor_rect.topleft = self.letters[self.index].rect.bottomleft
-        self.cursor_surface = pygame.transform.scale(self.cursor_surface, (self.letters[self.index].rect.size[0], self.cursor_rect.size[1]))
+        self.cursor_surface = pygame.transform.scale(self.cursor_surface, (self.letters[self.index].rect.size[0],self.cursor_rect.size[1]))
 
     def input(self, key: str) -> None:
         if key == self.letters[self.index].letter:

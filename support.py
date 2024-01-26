@@ -23,13 +23,17 @@ def get_texts(pack: str) -> list[str, ...]:
     return texts["texts"]
 
 
-def load_image(filename: str, new_size: tuple[int, int] = None) -> pygame.surface.Surface:
+def load_image(filename: str, new_scale: int | tuple[int, int] | None = None) -> pygame.surface.Surface:
     image = pygame.image.load(filename).convert_alpha()
 
-    if not new_size:
+    if not new_scale:
         return image
-    else:
-        return pygame.transform.scale(image, new_size)
+    elif isinstance(new_scale, int):
+        print(new_scale)
+        size = image.get_size()
+        new_scale = (new_scale * size[0], new_scale * size[1])
+
+    return pygame.transform.scale(image, new_scale)
 
 
 class Mouse(pygame.sprite.Sprite):

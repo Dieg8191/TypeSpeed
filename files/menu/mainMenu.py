@@ -16,19 +16,20 @@ class Menu:
         self.mouse = Mouse()
 
         self.buttons = pygame.sprite.Group()
-        self.background_keys = pygame.sprite.Group()
+        self.update_sprites = pygame.sprite.Group()
+        self.visible_sprites = pygame.sprite.Group()
 
         for i in range(25):
             key = choice("aqxwgylt")
-            BackgroundKey(key, self.background_keys)
+            BackgroundKey(key, (self.visible_sprites, self.update_sprites))
 
-        Button(load_image("assets/sprites/button1.png", (192, 64)), (10, 10), lambda: self.end_menu("play"), self.buttons)
-        Button(load_image("assets/sprites/button1.png", (192, 64)), (200, 200), lambda: self.end_menu("quit"), self.buttons)
+        Button("button", (10, 10), lambda: self.end_menu("play"), (self.visible_sprites, self.update_sprites, self.buttons))
+        Button("button", (200, 200), lambda: self.end_menu("quit"), (self.visible_sprites, self.update_sprites, self.buttons))
 
     def check_cursor(self) -> None:
         for button in self.buttons:
             if button.rect.colliderect(self.mouse.rect):
-                button.command()
+                button.start_command_timer()
 
     def end_menu(self, command) -> None:
         self.on_menu = False
@@ -50,10 +51,8 @@ class Menu:
 
             self.mouse.update()
 
-            self.background_keys.update(delta_time=delta_time)
-            self.background_keys.draw(self.display)
-
-            self.buttons.draw(self.display)
+            self.update_sprites.update(delta_time=delta_time)
+            self.visible_sprites.draw(self.display)
 
             pygame.display.flip()
 

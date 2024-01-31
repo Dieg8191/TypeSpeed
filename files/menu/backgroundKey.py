@@ -32,7 +32,8 @@ class BackgroundKey(pygame.sprite.Sprite):
             self.pressed = False
             self.image = self.sprites[0]
 
-        self.rect.y += self.speed * kwargs["delta_time"]
+        new_y_pos = self.speed * kwargs["delta_time"]
+        self.rect.y += .51 if new_y_pos < .51 else new_y_pos
 
         if self.rect.top > SCREEN_SIZE[1]:
             self.rect.y = randint(0, SCREEN_SIZE[1] + 20)

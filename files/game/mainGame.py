@@ -11,7 +11,9 @@ class Game:
         self.display = display
         self.clock = clock
 
-        self.mouse = Mouse()
+        self.update_sprites = pygame.sprite.Group()
+
+        Mouse(self.update_sprites)
 
         self.time_start = time()
         self.time_delay = 0
@@ -103,5 +105,5 @@ class Game:
 
                 self.board.update()
 
-            self.mouse.update()
+            self.update_sprites.update()
             pygame.display.flip()

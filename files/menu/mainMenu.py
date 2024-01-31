@@ -1,9 +1,9 @@
 from random import choice
 import pygame
-from config import FPS, SCREEN_SIZE
+from config import FPS
 from files.menu.ui import Button
 from files.menu.backgroundKey import BackgroundKey
-from support import Mouse, load_image
+from support import Mouse, show_text
 
 
 class Menu:
@@ -13,18 +13,20 @@ class Menu:
 
         self.on_menu = True
 
-        self.mouse = Mouse()
-
         self.buttons = pygame.sprite.Group()
         self.update_sprites = pygame.sprite.Group()
         self.visible_sprites = pygame.sprite.Group()
 
-        for i in range(25):
+        self.mouse = Mouse(self.update_sprites)
+
+        for i in range(45):
             key = choice("aqxwgylt")
             BackgroundKey(key, (self.visible_sprites, self.update_sprites))
 
-        Button("button", (10, 10), lambda: self.end_menu("play"), (self.visible_sprites, self.update_sprites, self.buttons))
-        Button("button", (200, 200), lambda: self.end_menu("quit"), (self.visible_sprites, self.update_sprites, self.buttons))
+        Button("button", (10, 10), "play", 50, lambda: self.end_menu("play"),
+               (self.visible_sprites, self.update_sprites, self.buttons))
+        Button("button", (200, 200), "quit", 16, lambda: self.end_menu("quit"),
+               (self.visible_sprites, self.update_sprites, self.buttons))
 
     def check_cursor(self) -> None:
         for button in self.buttons:
@@ -49,10 +51,17 @@ class Menu:
             delta_time = self.clock.tick(FPS) / 1000
             self.display.fill("white")
 
-            self.mouse.update()
-
-            self.update_sprites.update(delta_time=delta_time)
             self.visible_sprites.draw(self.display)
+            self.update_sprites.update(delta_time=delta_time, display=self.display)
+
+            show_text(self.display,
+                      (10, 10),
+                      "arial",
+                      25,
+                      "black",
+                      None,
+                      f"FPS: {int(self.clock.get_fps())}"
+                      )
 
             pygame.display.flip()
 

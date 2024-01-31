@@ -29,7 +29,6 @@ def load_image(filename: str, new_scale: int | tuple[int, int] | None = None) ->
     if not new_scale:
         return image
     elif isinstance(new_scale, int):
-        print(new_scale)
         size = image.get_size()
         new_scale = (new_scale * size[0], new_scale * size[1])
 
@@ -37,11 +36,11 @@ def load_image(filename: str, new_scale: int | tuple[int, int] | None = None) ->
 
 
 class Mouse(pygame.sprite.Sprite):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, groups: pygame.sprite.AbstractGroup) -> None:
+        super().__init__(groups)
         self.rect = pygame.rect.Rect(0, 0, 1, 1)
 
-    def update(self) -> None:
+    def update(self, *args, **kwargs) -> None:
         self.rect.x, self.rect.y = pygame.mouse.get_pos()
 
 

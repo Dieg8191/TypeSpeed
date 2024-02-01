@@ -17,21 +17,21 @@ class App:
         self.display = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
 
-        self.running = True
-
-        self.game = None
-
     def run(self) -> None:
-        while self.running:
-            menu = Menu(self.display, self.clock)
-            command = menu.run()
+        running = True
+        command = "menu"
 
+        while running:
             match command:
+                case "menu":
+                    pygame.mouse.set_visible(True)
+                    menu = Menu(self.display, self.clock)
+                    command = menu.run()
                 case "play":
                     game = Game(self.display, self.clock)
-                    game.run()
+                    command = game.run()
                 case "quit":
-                    self.running = False
+                    running = False
                 case _:
                     raise ValueError(f"Unknown command: {command}")
 

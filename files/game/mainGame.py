@@ -15,11 +15,10 @@ class Game:
         self.command = None
         self.running = True
 
-        pygame.mouse.set_visible(False)
-
         self.update_sprites = pygame.sprite.Group()
 
         self.mouse = Mouse(self.update_sprites)
+        pygame.mouse.set_visible(False)
 
         self.time_start = time()
         self.time_delay = 0
@@ -31,13 +30,13 @@ class Game:
         self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
         self.pause_buttons = pygame.sprite.Group()
 
-        Button("button", (200, 200), "quit", 19, self.quit, self.pause_buttons)
+        Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
 
-        self.board = Board(("a", "Hola", "John"))
+        self.board = Board("a")
 
-    def quit(self) -> None:
+    def quit(self, command) -> None:
         self.running = False
-        self.command = "quit"
+        self.command = command
 
     def timer(self) -> None:
         seconds = time() - self.time_start - self.time_delay
@@ -62,7 +61,7 @@ class Game:
                 pygame.mouse.set_visible(False)
             else:
                 self.pause_time = time()
-                self.display.blit(self.pause_surface, self.pause_rect)
+                self.display_copy = self.display.copy()
                 pygame.mouse.set_visible(True)
 
             self.paused = not self.paused
@@ -79,6 +78,10 @@ class Game:
 
             else:
                 self.key_input = key
+
+    def check_finished(self) -> None:
+        if self.board.finished:
+            self.quit("menu")
 
     def check_cursor(self) -> None:
         for button in self.pause_buttons:
@@ -100,10 +103,9 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_cursor()
 
-            self.clock.tick(FPS)
-
             if not self.paused:
                 self.display.fill("white")
+
                 if self.key_input and len(self.key_input) == 1:
                     self.board.input(self.key_input)
 
@@ -121,6 +123,9 @@ class Game:
                 self.board.update()
 
             else:
+                self.display.blit(self.display_copy, (0, 0))
+                self.display.blit(self.pause_surface, self.pause_rect)
+
                 show_text(self.display,
                           (100, 100),
                           "arial",
@@ -132,8 +137,10 @@ class Game:
                 self.pause_buttons.draw(self.display)
                 self.pause_buttons.update()
 
+            self.check_finished()
 
             self.update_sprites.update(display=self.display)
+            self.clock.tick(FPS)
             pygame.display.flip()
 
         return self.command

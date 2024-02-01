@@ -39,6 +39,8 @@ class Board:
         self.max_stage = len(texts)
         self.next_stage()
 
+        self.finished = False
+
     def next_stage(self) -> None:
         if self.stage < self.max_stage:
             self.sprites.empty()
@@ -68,7 +70,7 @@ class Board:
 
             self.update_cursor()
         else:
-            print("done")
+            self.finished = True
 
     def update_cursor(self) -> None:
         self.cursor_rect.topleft = self.letters[self.index].rect.bottomleft

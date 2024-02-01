@@ -3,7 +3,8 @@ import pygame
 from sys import exit
 from support import show_text, Mouse
 from config import FPS
-from files.game.ui import Board
+from ui import Button
+from files.game.GameUi import Board
 
 
 class Game:
@@ -11,9 +12,14 @@ class Game:
         self.display = display
         self.clock = clock
 
+        self.command = None
+        self.running = True
+
+        pygame.mouse.set_visible(False)
+
         self.update_sprites = pygame.sprite.Group()
 
-        Mouse(self.update_sprites)
+        self.mouse = Mouse(self.update_sprites)
 
         self.time_start = time()
         self.time_delay = 0
@@ -23,8 +29,15 @@ class Game:
         self.pause_surface.fill("black")
         self.pause_surface.set_alpha(80)
         self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
+        self.pause_buttons = pygame.sprite.Group()
+
+        Button("button", (200, 200), "quit", 19, self.quit, self.pause_buttons)
 
         self.board = Board(("a", "Hola", "John"))
+
+    def quit(self) -> None:
+        self.running = False
+        self.command = "quit"
 
     def timer(self) -> None:
         seconds = time() - self.time_start - self.time_delay
@@ -46,19 +59,13 @@ class Game:
         if keys[pygame.K_ESCAPE]:
             if self.paused:
                 self.time_delay += time() - self.pause_time
+                pygame.mouse.set_visible(False)
             else:
                 self.pause_time = time()
+                self.display.blit(self.pause_surface, self.pause_rect)
+                pygame.mouse.set_visible(True)
 
             self.paused = not self.paused
-            self.display.blit(self.pause_surface, self.pause_rect)
-            show_text(self.display,
-                      (100, 100),
-                      "arial",
-                      80,
-                      "black",
-                      None,
-                      "Paused (Escape to unpause)"
-                      )
 
         if not self.paused:
             if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
@@ -73,8 +80,13 @@ class Game:
             else:
                 self.key_input = key
 
-    def run(self) -> None:
-        while True:
+    def check_cursor(self) -> None:
+        for button in self.pause_buttons:
+            if button.rect.colliderect(self.mouse.rect):
+                button.start_command_timer()
+
+    def run(self) -> str:
+        while self.running:
             self.key_input = None
 
             for event in pygame.event.get():
@@ -84,6 +96,9 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     self.get_key(event)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.check_cursor()
 
             self.clock.tick(FPS)
 
@@ -105,5 +120,20 @@ class Game:
 
                 self.board.update()
 
-            self.update_sprites.update()
+            else:
+                show_text(self.display,
+                          (100, 100),
+                          "arial",
+                          80,
+                          "black",
+                          None,
+                          "Paused (Escape to unpause)"
+                          )
+                self.pause_buttons.draw(self.display)
+                self.pause_buttons.update()
+
+
+            self.update_sprites.update(display=self.display)
             pygame.display.flip()
+
+        return self.command

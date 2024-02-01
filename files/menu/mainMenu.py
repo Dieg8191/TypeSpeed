@@ -1,7 +1,7 @@
 from random import choice
 import pygame
 from config import FPS
-from files.menu.ui import Button
+from ui import Button
 from files.menu.backgroundKey import BackgroundKey
 from support import Mouse, show_text
 
@@ -20,12 +20,12 @@ class Menu:
         self.mouse = Mouse(self.update_sprites)
 
         for i in range(45):
-            key = choice("aqxwgylt")
+            key = choice(['a', 'q', 'x', 'w', 'g', 'y', 'l', 't'])
             BackgroundKey(key, (self.visible_sprites, self.update_sprites))
 
-        Button("button", (10, 10), "play", 50, lambda: self.end_menu("play"),
+        Button("button", (100, 100), "play", 50, lambda: self.end_menu("play"),
                (self.visible_sprites, self.update_sprites, self.buttons))
-        Button("button", (200, 200), "quit", 16, lambda: self.end_menu("quit"),
+        Button("button", (200, 200), "quit", 50, lambda: self.end_menu("quit"),
                (self.visible_sprites, self.update_sprites, self.buttons))
 
     def check_cursor(self) -> None:

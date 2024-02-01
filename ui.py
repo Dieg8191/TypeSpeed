@@ -15,8 +15,15 @@ class Button(pygame.sprite.Sprite):
         self.image = self.sprites[0]
         self.rect = self.image.get_rect(topleft=pos)
 
-        self.text = pygame.font.Font(FONTS["arial"], text_size).render(text, True, "black")
-        self.text_rect = self.text.get_rect(center=self.rect.center)
+        x, y = self.sprites[0].get_size()
+        x //= 2
+        y //= 2
+
+        text_surface = pygame.font.Font(FONTS["arial"], text_size).render(text, True, "black")
+        text_rect = text_surface.get_rect(center=(x, y))
+
+        for image in self.sprites:
+            image.blit(text_surface, text_rect)
 
         self.command = command
         self.start_timer_time = None
@@ -29,7 +36,9 @@ class Button(pygame.sprite.Sprite):
 
     def update(self, *args, **kwargs):
         if self.timer:
-            if time() - self.start_timer_time >= 0.15:
+            if time() - self.start_timer_time >= 0.2:
                 self.command()
 
-        kwargs["display"].blit(self.text, self.text_rect)
+
+
+

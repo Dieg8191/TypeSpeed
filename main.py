@@ -19,16 +19,17 @@ class App:
 
         self.running = True
 
-        self.game = Game(self.display, self.clock)
-        self.menu = Menu(self.display, self.clock)
+        self.game = None
 
     def run(self) -> None:
         while self.running:
-            command = self.menu.run()
+            menu = Menu(self.display, self.clock)
+            command = menu.run()
 
             match command:
                 case "play":
-                    self.game.run()
+                    game = Game(self.display, self.clock)
+                    game.run()
                 case "quit":
                     self.running = False
                 case _:

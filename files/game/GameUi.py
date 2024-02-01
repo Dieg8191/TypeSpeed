@@ -45,11 +45,10 @@ class Board:
         if self.stage < self.max_stage:
             self.sprites.empty()
             text = self.texts[self.stage]
-            print(text)
 
             self.letters = [Letter(text[0], (SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 40, "black")]
-            y = 100
 
+            y = 100
             for char in text[1::]:
                 x = self.letters[-1].rect.right
 
@@ -65,8 +64,8 @@ class Board:
             self.stage += 1
 
             font = pygame.font.Font(FONTS["arial"], 50)
-            image = font.render(f"{self.stage}/{self.max_stage}", True, "black")
-            Tile(image, (SCREEN_SIZE[0] - 100, 25), self.sprites)
+            text_surface = font.render(f"{self.stage}/{self.max_stage}", True, "black")
+            Tile(text_surface, (SCREEN_SIZE[0] - 100, 25), self.sprites)
 
             self.update_cursor()
         else:
@@ -74,9 +73,10 @@ class Board:
 
     def update_cursor(self) -> None:
         self.cursor_rect.topleft = self.letters[self.index].rect.bottomleft
-        self.cursor_surface = pygame.transform.scale(self.cursor_surface, (self.letters[self.index].rect.size[0],self.cursor_rect.size[1]))
+        self.cursor_surface = pygame.transform.scale(self.cursor_surface,
+                                                     (self.letters[self.index].rect.size[0], self.cursor_rect.size[1]))
 
-    def input(self, key: str) -> None:
+    def type(self, key: str) -> None:
         if key == self.letters[self.index].letter:
             self.letters[self.index].update_image(2)
             self.index += 1

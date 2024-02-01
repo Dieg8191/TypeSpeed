@@ -16,8 +16,7 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
         x, y = self.sprites[0].get_size()
-        x //= 2
-        y //= 2
+        x, y = x // 2, y // 2
 
         text_surface = pygame.font.Font(FONTS["arial"], text_size).render(text, True, "black")
         text_rect = text_surface.get_rect(center=(x, y))

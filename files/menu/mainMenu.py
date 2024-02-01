@@ -37,6 +37,16 @@ class Menu:
         self.on_menu = False
         self.command = command
 
+    def show_fps(self) -> None:
+        show_text(self.display,
+                  (10, 10),
+                  "arial",
+                  25,
+                  "black",
+                  None,
+                  f"FPS: {int(self.clock.get_fps())}"
+                  )
+
     def run(self) -> str:
         while self.on_menu:
             for event in pygame.event.get():
@@ -54,14 +64,7 @@ class Menu:
             self.visible_sprites.draw(self.display)
             self.update_sprites.update(delta_time=delta_time, display=self.display)
 
-            show_text(self.display,
-                      (10, 10),
-                      "arial",
-                      25,
-                      "black",
-                      None,
-                      f"FPS: {int(self.clock.get_fps())}"
-                      )
+            self.show_fps()
 
             pygame.display.flip()
 

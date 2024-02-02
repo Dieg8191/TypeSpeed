@@ -12,20 +12,9 @@ class Game:
         self.display = display
         self.clock = clock
 
-        self.start()
-
-    def start(self) -> None:
-        self.command = None
-        self.running = True
-
         self.update_sprites = pygame.sprite.Group()
 
         self.mouse = Mouse(self.update_sprites)
-        pygame.mouse.set_visible(False)
-
-        self.time_start = time()
-        self.time_delay = 0
-        self.paused = False
 
         self.pause_surface = pygame.surface.Surface(self.display.get_size())
         self.pause_surface.fill("black")
@@ -33,8 +22,21 @@ class Game:
         self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
         self.pause_buttons = pygame.sprite.Group()
 
+        self.start()
+
+    def start(self) -> None:
+        self.command = None
+        self.running = True
+
+        pygame.mouse.set_visible(False)
+
+        self.pause_buttons.empty()
         Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
         Button("button", (200, 400), "restart", 19, self.start, self.pause_buttons)
+
+        self.time_start = time()
+        self.time_delay = 0
+        self.paused = False
 
         self.board = Board(("a", "b"))
 

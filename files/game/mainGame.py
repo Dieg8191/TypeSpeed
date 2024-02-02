@@ -28,8 +28,6 @@ class Game:
         self.command = None
         self.running = True
 
-        pygame.mouse.set_visible(False)
-
         self.pause_buttons.empty()
         Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
         Button("button", (200, 400), "restart", 19, self.start, self.pause_buttons)
@@ -39,6 +37,8 @@ class Game:
         self.paused = False
 
         self.board = Board(("a", "b"))
+
+        pygame.mouse.set_visible(False)
 
     def quit(self, command) -> None:
         self.running = False

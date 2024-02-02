@@ -12,6 +12,9 @@ class Game:
         self.display = display
         self.clock = clock
 
+        self.start()
+
+    def start(self) -> None:
         self.command = None
         self.running = True
 
@@ -31,8 +34,9 @@ class Game:
         self.pause_buttons = pygame.sprite.Group()
 
         Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
+        Button("button", (200, 400), "restart", 19, self.start, self.pause_buttons)
 
-        self.board = Board("a")
+        self.board = Board(("a", "b"))
 
     def quit(self, command) -> None:
         self.running = False

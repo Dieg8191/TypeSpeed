@@ -1,6 +1,9 @@
 import pygame
 from config import SCREEN_SIZE, FONTS
-from support import Tile
+from support import Tile, Mouse
+from ui import Button
+from support import show_text
+from typing import Callable
 
 
 class Letter(pygame.sprite.Sprite):
@@ -9,7 +12,7 @@ class Letter(pygame.sprite.Sprite):
         super().__init__(groups)
 
         self.letter = letter
-        font = pygame.font.Font(FONTS["comic"], 60)
+        font = pygame.font.Font(FONTS[font], font_size)
         self.index = 1
         self.sprites = (font.render(letter, True, font_color, "red"),
                         font.render(letter, True, font_color),
@@ -46,18 +49,18 @@ class Board:
             self.sprites.empty()
             text = self.texts[self.stage]
 
-            self.letters = [Letter(text[0], (SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 40, "black")]
+            self.letters = [Letter(text[0], (SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 60, "black")]
 
             y = 100
             for char in text[1::]:
                 x = self.letters[-1].rect.right
 
-                if x > SCREEN_SIZE[0] - SCREEN_SIZE[0] * .15 and self.letters[-1].letter == " ":
+                if x > SCREEN_SIZE[0] * .85 and self.letters[-1].letter == " ":
                     x = SCREEN_SIZE[0] * .10
                     y += self.letters[-1].rect.size[1]
 
                 self.letters.append(Letter(char, (x, y), self.sprites,
-                                           "arial", 40, "black"))
+                                           "arial", 60, "black"))
 
             self.finished = False
             self.index = 0
@@ -106,3 +109,50 @@ class Board:
     def update(self) -> None:
         self.sprites.draw(self.display)
         self.display.blit(self.cursor_surface, self.cursor_rect)
+
+
+class PauseMenu:
+    def __init__(self, quit_command: Callable, start_game: Callable) -> None:
+        self.display = pygame.display.get_surface()
+
+        self.quit = quit_command
+        self.start_game = start_game
+
+        self.pause_surface = pygame.surface.Surface(self.display.get_size())
+        self.pause_surface.fill("black")
+        self.pause_surface.set_alpha(80)
+        self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
+
+        self.pause_buttons = pygame.sprite.Group()
+        self.mouse = Mouse(())
+
+    def start(self) -> None:
+        pygame.mouse.set_visible(True)
+        self.background = self.display.copy()
+
+        self.pause_buttons.empty()
+        Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
+        Button("button", (200, 400), "restart", 19, self.start_game, self.pause_buttons)
+
+    def check_cursor(self) -> None:
+        for button in self.pause_buttons:
+            if button.rect.colliderect(self.mouse.rect):
+                button.start_command_timer()
+
+    def run(self) -> None:
+        self.display.blit(self.background, (0, 0))
+        self.display.blit(self.pause_surface, self.pause_rect)
+
+        show_text(self.display,
+                  (100, 100),
+                  "arial",
+                  80,
+                  "black",
+                  None,
+                  "Paused (Escape to unpause)"
+                  )
+
+        self.pause_buttons.draw(self.display)
+        self.mouse.update()
+        self.pause_buttons.update()
+

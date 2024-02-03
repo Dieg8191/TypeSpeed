@@ -4,7 +4,7 @@ from sys import exit
 from support import show_text, Mouse
 from config import FPS
 from ui import Button
-from files.game.GameUi import Board
+from files.game.gameUi import Board, PauseMenu
 
 
 class Game:
@@ -16,27 +16,20 @@ class Game:
 
         self.mouse = Mouse(self.update_sprites)
 
-        self.pause_surface = pygame.surface.Surface(self.display.get_size())
-        self.pause_surface.fill("black")
-        self.pause_surface.set_alpha(80)
-        self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
-        self.pause_buttons = pygame.sprite.Group()
+        self.pause_menu = PauseMenu(self.quit, self.start_game)
 
-        self.start()
+        self.start_game()
 
-    def start(self) -> None:
+    def start_game(self) -> None:
         self.command = None
         self.running = True
-
-        self.pause_buttons.empty()
-        Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
-        Button("button", (200, 400), "restart", 19, self.start, self.pause_buttons)
 
         self.time_start = time()
         self.time_delay = 0
         self.paused = False
 
-        self.board = Board(("a", "b"))
+        self.texts = ("hola pepe", "hola")
+        self.board = Board(self.texts)
 
         pygame.mouse.set_visible(False)
 
@@ -57,6 +50,8 @@ class Game:
                   f"Time: {int(minutes)}:{int(seconds) if int(seconds) > 9 else "0" + str(int(seconds))}"
                   )
 
+        self.time = seconds
+
     def key_input(self, event) -> None:
         keys = pygame.key.get_pressed()
         key = pygame.key.name(event.key)
@@ -67,8 +62,7 @@ class Game:
                 pygame.mouse.set_visible(False)
             else:
                 self.pause_time = time()
-                self.display_copy = self.display.copy()
-                pygame.mouse.set_visible(True)
+                self.pause_menu.start()
 
             self.paused = not self.paused
 
@@ -87,12 +81,9 @@ class Game:
 
     def check_finished(self) -> None:
         if self.board.finished:
+            print(f"time: {self.time}")
+            print(f"w/m: {(60 * len(' '.join(self.texts).split())) / self.time}")
             self.quit("menu")
-
-    def check_cursor(self) -> None:
-        for button in self.pause_buttons:
-            if button.rect.colliderect(self.mouse.rect):
-                button.start_command_timer()
 
     def show_fps(self) -> None:
         show_text(self.display,
@@ -103,21 +94,6 @@ class Game:
                   None,
                   f"FPS: {int(self.clock.get_fps())}"
                   )
-
-    def pause_menu(self) -> None:
-        self.display.blit(self.display_copy, (0, 0))
-        self.display.blit(self.pause_surface, self.pause_rect)
-
-        show_text(self.display,
-                  (100, 100),
-                  "arial",
-                  80,
-                  "black",
-                  None,
-                  "Paused (Escape to unpause)"
-                  )
-        self.pause_buttons.draw(self.display)
-        self.pause_buttons.update()
 
     def run(self) -> str:
         while self.running:
@@ -132,7 +108,7 @@ class Game:
                     self.key_input(event)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.check_cursor()
+                    self.pause_menu.check_cursor()
 
             if not self.paused:
                 self.display.fill("white")
@@ -146,7 +122,7 @@ class Game:
                 self.board.update()
 
             else:
-                self.pause_menu()
+                self.pause_menu.run()
 
             self.check_finished()
 

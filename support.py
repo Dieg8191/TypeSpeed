@@ -17,7 +17,7 @@ def show_text(display: pygame.surface.Surface, pos: tuple[int, int], font: str,
 
 
 def get_texts(pack: str) -> list[str, ...]:
-    with open(f"assets/texts/{pack}", 'r') as file:
+    with open(f"assets/texts/{pack}.json", 'r') as file:
         texts = loads(file.read())
 
     return texts["texts"]

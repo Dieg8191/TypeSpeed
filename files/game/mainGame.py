@@ -1,7 +1,7 @@
 from time import time
 import pygame
 from sys import exit
-from support import show_text, Mouse
+from support import show_text, Mouse, get_texts
 from config import FPS
 from ui import Button
 from files.game.gameUi import Board, PauseMenu
@@ -28,7 +28,7 @@ class Game:
         self.time_delay = 0
         self.paused = False
 
-        self.texts = ("hola pepe", "hola")
+        self.texts = (get_texts("basic")[2])
         self.board = Board(self.texts)
 
         pygame.mouse.set_visible(False)

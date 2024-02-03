@@ -26,7 +26,7 @@ class Letter(pygame.sprite.Sprite):
 
 
 class Board:
-    def __init__(self, texts: tuple[str, ...]) -> None:
+    def __init__(self, texts: tuple[str, ...] | str) -> None:
         x, y = SCREEN_SIZE[0] * .08, SCREEN_SIZE[1] * .08
         self.board = pygame.rect.Rect(x, y, SCREEN_SIZE[0] - (x * 2), SCREEN_SIZE[1] - (y * 1.5))
         self.board_surface = pygame.surface.Surface((self.board.width, self.board.height))
@@ -37,14 +37,15 @@ class Board:
         self.display = pygame.display.get_surface()
         self.sprites = pygame.sprite.Group()
 
-        self.texts = texts
+        self.texts = texts if isinstance(texts, tuple) else (texts, )
         self.stage = 0
-        self.max_stage = len(texts)
+        self.max_stage = len(self.texts)
         self.next_stage()
 
         self.finished = False
 
     def next_stage(self) -> None:
+        print(self.stage, self.max_stage)
         if self.stage < self.max_stage:
             self.sprites.empty()
             text = self.texts[self.stage]

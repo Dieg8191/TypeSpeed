@@ -3,8 +3,7 @@ import pygame
 from sys import exit
 from support import show_text, Mouse, get_texts
 from config import FPS
-from ui import Button
-from files.game.gameUi import Board, PauseMenu
+from files.game.gameUi import Board, PauseMenu, ResultsMenu
 
 
 class Game:
@@ -17,6 +16,7 @@ class Game:
         self.mouse = Mouse(self.update_sprites)
 
         self.pause_menu = PauseMenu(self.quit, self.start_game)
+        self.result_menu = ResultsMenu(self.quit, self.start_game)
 
         self.start_game()
 
@@ -28,7 +28,9 @@ class Game:
         self.time_delay = 0
         self.paused = False
 
-        self.texts = (get_texts("basic")[2])
+        self.finished = False
+
+        self.texts = "hola"
         self.board = Board(self.texts)
 
         pygame.mouse.set_visible(False)
@@ -80,10 +82,10 @@ class Game:
                 self.key_pressed = key
 
     def check_finished(self) -> None:
-        if self.board.finished:
-            print(f"time: {self.time}")
-            print(f"w/m: {(60 * len(' '.join(self.texts).split())) / self.time}")
-            self.quit("menu")
+        if self.board.finished and not self.finished:
+            self.finished = True
+            words_per_minute = (60 * len(' '.join(self.texts).split())) / self.time
+            self.result_menu.start(self.time, words_per_minute)
 
     def show_fps(self) -> None:
         show_text(self.display,
@@ -108,9 +110,12 @@ class Game:
                     self.key_input(event)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.pause_menu.check_cursor()
+                    if self.paused:
+                        self.pause_menu.check_cursor()
+                    elif self.finished:
+                        self.result_menu.check_cursor()
 
-            if not self.paused:
+            if not self.paused and not self.finished:
                 self.display.fill("white")
 
                 if self.key_pressed and len(self.key_pressed) == 1:
@@ -122,7 +127,10 @@ class Game:
                 self.board.update()
 
             else:
-                self.pause_menu.run()
+                if self.paused:
+                    self.pause_menu.run()
+                else:
+                    self.result_menu.run()
 
             self.check_finished()
 

@@ -3,7 +3,7 @@ from config import SCREEN_SIZE, FONTS
 from support import Tile, Mouse
 from ui import Button
 from support import show_text
-from typing import Callable
+from typing import Callable, override
 
 
 class Letter(pygame.sprite.Sprite):
@@ -45,7 +45,6 @@ class Board:
         self.finished = False
 
     def next_stage(self) -> None:
-        print(self.stage, self.max_stage)
         if self.stage < self.max_stage:
             self.sprites.empty()
             text = self.texts[self.stage]
@@ -112,37 +111,100 @@ class Board:
         self.display.blit(self.cursor_surface, self.cursor_rect)
 
 
-class PauseMenu:
-    def __init__(self, quit_command: Callable, start_game: Callable) -> None:
+class InGameMenu:
+    def __init__(self) -> None:
         self.display = pygame.display.get_surface()
 
-        self.quit = quit_command
-        self.start_game = start_game
+        self.blur_surface = pygame.surface.Surface(self.display.get_size())
+        self.blur_surface.fill("black")
+        self.blur_surface.set_alpha(80)
+        self.pause_rect = self.blur_surface.get_rect(topleft=(0, 0))
 
-        self.pause_surface = pygame.surface.Surface(self.display.get_size())
-        self.pause_surface.fill("black")
-        self.pause_surface.set_alpha(80)
-        self.pause_rect = self.pause_surface.get_rect(topleft=(0, 0))
-
-        self.pause_buttons = pygame.sprite.Group()
+        self.buttons = pygame.sprite.Group()
         self.mouse = Mouse(())
 
     def start(self) -> None:
         pygame.mouse.set_visible(True)
         self.background = self.display.copy()
 
-        self.pause_buttons.empty()
-        Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.pause_buttons)
-        Button("button", (200, 400), "restart", 19, self.start_game, self.pause_buttons)
+        self.buttons.empty()
 
     def check_cursor(self) -> None:
-        for button in self.pause_buttons:
+        for button in self.buttons:
             if button.rect.colliderect(self.mouse.rect):
                 button.start_command_timer()
 
     def run(self) -> None:
         self.display.blit(self.background, (0, 0))
-        self.display.blit(self.pause_surface, self.pause_rect)
+        self.display.blit(self.blur_surface, self.pause_rect)
+
+        self.buttons.draw(self.display)
+        self.mouse.update()
+        self.buttons.update()
+
+
+class ResultsMenu(InGameMenu):
+    @override
+    def __init__(self, quit_command: Callable, start_game: Callable) -> None:
+        super().__init__()
+        self.display = pygame.display.get_surface()
+
+        self.quit = quit_command
+        self.start_game = start_game
+
+        self.time = None
+        self.words_per_minute = None
+
+    @override
+    def start(self, time: int = 0, words_per_minute: int = 0) -> None:
+        super().start()
+
+        self.time = time
+        self.words_per_minute = words_per_minute
+
+        Button("button", (400, 300), "quit", 19, lambda: self.quit("menu"), self.buttons)
+        Button("button", (400, 400), "restart", 19, self.start_game, self.buttons)
+
+    @override
+    def run(self) -> None:
+        super().run()
+
+        show_text(self.display,
+                  (200, 100),
+                  "arial",
+                  80,
+                  "black",
+                  None,
+                  f"total time: {self.time: .2} seconds"
+                  )
+
+        show_text(self.display,
+                  (200, 200),
+                  "arial",
+                  80,
+                  "black",
+                  None,
+                  f"Words/minute: {round(self.words_per_minute, 2)}"
+                  )
+
+
+class PauseMenu(InGameMenu):
+    @override
+    def __init__(self, quit_command: Callable, start_game: Callable) -> None:
+        super().__init__()
+
+        self.quit = quit_command
+        self.start_game = start_game
+
+    @override
+    def start(self) -> None:
+        super().start()
+        Button("button", (200, 200), "quit", 19, lambda: self.quit("menu"), self.buttons)
+        Button("button", (200, 400), "restart", 19, self.start_game, self.buttons)
+
+    @override
+    def run(self) -> None:
+        super().run()
 
         show_text(self.display,
                   (100, 100),
@@ -153,7 +215,5 @@ class PauseMenu:
                   "Paused (Escape to unpause)"
                   )
 
-        self.pause_buttons.draw(self.display)
-        self.mouse.update()
-        self.pause_buttons.update()
+
 

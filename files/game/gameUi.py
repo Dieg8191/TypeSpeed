@@ -31,6 +31,8 @@ class Board:
         self.board = pygame.rect.Rect(x, y, SCREEN_SIZE[0] - (x * 2), SCREEN_SIZE[1] - (y * 1.5))
         self.board_surface = pygame.surface.Surface((self.board.width, self.board.height))
 
+        self.mistakes = 0
+
         self.cursor_surface = pygame.Surface((10, 5))
         self.cursor_rect = self.cursor_surface.get_rect(topleft=(0, 0))
 
@@ -91,6 +93,7 @@ class Board:
 
         elif self.letters[self.index].index == 1:
             self.letters[self.index].update_image(0)
+            self.mistakes += 1
             self.index += 1
 
         if self.index < 0:
@@ -152,15 +155,13 @@ class ResultsMenu(InGameMenu):
         self.quit = quit_command
         self.start_game = start_game
 
-        self.time = None
-        self.words_per_minute = None
-
     @override
-    def start(self, time: int = 0, words_per_minute: int = 0) -> None:
+    def start(self, time: int = 0, words_per_minute: int = 0, mistakes: int = 0) -> None:
         super().start()
 
         self.time = time
         self.words_per_minute = words_per_minute
+        self.mistakes = mistakes
 
         Button("button", (400, 300), "quit", 19, lambda: self.quit("menu"), self.buttons)
         Button("button", (400, 400), "restart", 19, self.start_game, self.buttons)
@@ -170,21 +171,30 @@ class ResultsMenu(InGameMenu):
         super().run()
 
         show_text(self.display,
-                  (200, 100),
+                  (250, 100),
                   "arial",
                   80,
                   "black",
                   None,
-                  f"total time: {self.time: .2} seconds"
+                  f"total time: {round(self.time, 3)} seconds"
                   )
 
         show_text(self.display,
-                  (200, 200),
+                  (250, 200),
                   "arial",
                   80,
                   "black",
                   None,
                   f"Words/minute: {round(self.words_per_minute, 2)}"
+                  )
+
+        show_text(self.display,
+                  (250, 0),
+                  "arial",
+                  80,
+                  "black",
+                  None,
+                  f"Mistakes: {self.mistakes}"
                   )
 
 
@@ -214,6 +224,4 @@ class PauseMenu(InGameMenu):
                   None,
                   "Paused (Escape to unpause)"
                   )
-
-
 

@@ -30,7 +30,7 @@ class Game:
 
         self.finished = False
 
-        self.texts = "hola"
+        self.texts = get_texts("basic")[2]
         self.board = Board(self.texts)
 
         pygame.mouse.set_visible(False)
@@ -84,8 +84,11 @@ class Game:
     def check_finished(self) -> None:
         if self.board.finished and not self.finished:
             self.finished = True
-            words_per_minute = (60 * len(' '.join(self.texts).split())) / self.time
-            self.result_menu.start(self.time, words_per_minute)
+
+            seconds = time() - self.time_start - self.time_delay
+
+            words_per_minute = (60 * len(' '.join(self.texts).split())) / seconds
+            self.result_menu.start(seconds, words_per_minute, self.board.mistakes)
 
     def show_fps(self) -> None:
         show_text(self.display,

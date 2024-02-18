@@ -1,7 +1,7 @@
 import pickle
 from dataclasses import dataclass
 
-VERSION = "0.3.0
+VERSION = "0.3.0"
 
 font_root = "assets/fonts/"
 FONTS = {
@@ -14,25 +14,26 @@ FONTS = {
 
 
 @dataclass
-class Config:
+class UserConfig:
     FPS: int
-    SCREEN_WIDTH: tuple[int, int]
+    SCREEN_SIZE: tuple[int, int]
 
 
-def load_config() -> Config:
+def load_config() -> UserConfig:
     try:
         with open("data/config.data", "rb") as file:
             file = pickle.load(file)
 
-    except FileNotFoundError:
-        file = Config(60, (1280, 720))
+    except FileNotFoundError or AttributeError:
+        file = UserConfig(60, (1280, 720))
         save_config(file)
 
     return file
 
 
-def save_config(data: Config) -> None:
+def save_config(data: UserConfig) -> None:
     with open("data/config.data", "wb") as file:
         pickle.dump(data, file)
 
-print(load_config().SCREEN_WIDTH)
+
+user_config = load_config()

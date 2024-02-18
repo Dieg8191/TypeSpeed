@@ -1,5 +1,5 @@
 import pygame
-from config import SCREEN_SIZE, FONTS
+from userconfig import user_config, FONTS
 from support import Tile, Mouse
 from ui import Button
 from support import show_text
@@ -27,8 +27,8 @@ class Letter(pygame.sprite.Sprite):
 
 class Board:
     def __init__(self, texts: tuple[str, ...] | str) -> None:
-        x, y = SCREEN_SIZE[0] * .08, SCREEN_SIZE[1] * .08
-        self.board = pygame.rect.Rect(x, y, SCREEN_SIZE[0] - (x * 2), SCREEN_SIZE[1] - (y * 1.5))
+        x, y = user_config.SCREEN_SIZE[0] * .08, user_config.SCREEN_SIZE[1] * .08
+        self.board = pygame.rect.Rect(x, y, user_config.SCREEN_SIZE[0] - (x * 2), user_config.SCREEN_SIZE[1] - (y * 1.5))
         self.board_surface = pygame.surface.Surface((self.board.width, self.board.height))
 
         self.mistakes = 0
@@ -51,14 +51,14 @@ class Board:
             self.sprites.empty()
             text = self.texts[self.stage]
 
-            self.letters = [Letter(text[0], (SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 60, "black")]
+            self.letters = [Letter(text[0], (user_config.SCREEN_SIZE[0] * .10, 100), self.sprites, "arial", 60, "black")]
 
             y = 100
             for char in text[1::]:
                 x = self.letters[-1].rect.right
 
-                if x > SCREEN_SIZE[0] * .85 and self.letters[-1].letter == " ":
-                    x = SCREEN_SIZE[0] * .10
+                if x > user_config.SCREEN_SIZE[0] * .85 and self.letters[-1].letter == " ":
+                    x = user_config.SCREEN_SIZE[0] * .10
                     y += self.letters[-1].rect.size[1]
 
                 self.letters.append(Letter(char, (x, y), self.sprites,
@@ -70,7 +70,7 @@ class Board:
 
             font = pygame.font.Font(FONTS["arial"], 50)
             text_surface = font.render(f"{self.stage}/{self.max_stage}", True, "black")
-            Tile(text_surface, (SCREEN_SIZE[0] - 100, 25), self.sprites)
+            Tile(text_surface, (user_config.SCREEN_SIZE[0] - 100, 25), self.sprites)
 
             self.update_cursor()
         else:

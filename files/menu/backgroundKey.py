@@ -1,6 +1,6 @@
 import pygame
 from support import load_image
-from config import SCREEN_SIZE
+from userconfig import user_config
 from time import time
 from random import randint
 
@@ -17,7 +17,7 @@ class BackgroundKey(pygame.sprite.Sprite):
             self.sprites[i].set_alpha(150)
 
         self.image = self.sprites[0]
-        self.rect = self.image.get_rect(topleft=(randint(0, SCREEN_SIZE[0]), randint(0, SCREEN_SIZE[1])))
+        self.rect = self.image.get_rect(topleft=(randint(0, user_config.SCREEN_SIZE[0]), randint(0, user_config.SCREEN_SIZE[1])))
 
         self.speed = randint(200, 300)
 
@@ -35,8 +35,8 @@ class BackgroundKey(pygame.sprite.Sprite):
         new_y_pos = self.speed * kwargs["delta_time"]
         self.rect.y += .51 if new_y_pos < .51 else new_y_pos
 
-        if self.rect.top > SCREEN_SIZE[1]:
-            self.rect.y = randint(0, SCREEN_SIZE[1] + 20)
-            self.rect.x = randint(0, SCREEN_SIZE[0])
+        if self.rect.top > user_config.SCREEN_SIZE[1]:
+            self.rect.y = randint(0, user_config.SCREEN_SIZE[1] + 20)
+            self.rect.x = randint(0, user_config.SCREEN_SIZE[0])
             self.rect.bottom = 0
             self.speed = randint(200, 300)

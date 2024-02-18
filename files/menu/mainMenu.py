@@ -1,6 +1,6 @@
 from random import choice
 import pygame
-from config import FPS
+from userconfig import user_config
 from ui import Button
 from files.menu.backgroundKey import BackgroundKey
 from support import Mouse, show_text
@@ -58,7 +58,7 @@ class Menu:
                     if event.button == pygame.BUTTON_LEFT:
                         self.check_cursor()
 
-            delta_time = self.clock.tick(FPS) / 1000
+            delta_time = self.clock.tick(user_config.FPS) / 1000
             self.display.fill("white")
 
             self.visible_sprites.draw(self.display)

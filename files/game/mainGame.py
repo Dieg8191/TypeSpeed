@@ -2,7 +2,7 @@ from time import time
 import pygame
 from sys import exit
 from support import show_text, Mouse, get_texts
-from config import FPS
+from userconfig import user_config
 from files.game.gameUi import Board, PauseMenu, ResultsMenu
 
 
@@ -138,7 +138,7 @@ class Game:
             self.check_finished()
 
             self.update_sprites.update(display=self.display)
-            self.clock.tick(FPS)
+            self.clock.tick(user_config.FPS)
             pygame.display.flip()
 
         return self.command

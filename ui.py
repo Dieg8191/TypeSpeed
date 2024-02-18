@@ -1,7 +1,7 @@
 import pygame
 from typing import Callable
 from time import time
-from config import FONTS
+from userconfig import FONTS
 from support import load_image
 
 

@@ -1,6 +1,6 @@
 from files.game.mainGame import Game
 from files.menu.mainMenu import Menu
-from config import SCREEN_SIZE, VERSION
+from userconfig import user_config, VERSION
 from ctypes import WinDLL
 import pygame
 
@@ -17,7 +17,7 @@ class App:
 
         # Creating thw window
         pygame.display.set_caption(f"Type Speed v{VERSION}")
-        self.display = pygame.display.set_mode(SCREEN_SIZE)
+        self.display = pygame.display.set_mode(user_config.SCREEN_SIZE)
         self.clock = pygame.time.Clock()
 
     def run(self) -> None:

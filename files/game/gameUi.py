@@ -174,7 +174,7 @@ class ResultsMenu(InGameMenu):
                   (250, 100),
                   "arial",
                   80,
-                  "black",
+                  "red",
                   None,
                   f"total time: {round(self.time, 3)} seconds"
                   )
@@ -183,7 +183,7 @@ class ResultsMenu(InGameMenu):
                   (250, 200),
                   "arial",
                   80,
-                  "black",
+                  "red",
                   None,
                   f"Words/minute: {round(self.words_per_minute, 2)}"
                   )
@@ -192,7 +192,7 @@ class ResultsMenu(InGameMenu):
                   (250, 0),
                   "arial",
                   80,
-                  "black",
+                  "red",
                   None,
                   f"Mistakes: {self.mistakes}"
                   )

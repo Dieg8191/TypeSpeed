@@ -1,5 +1,7 @@
+# Constants of the game
+
 VERSION = "0.3.0"
-FPS = 60
+FPS = 60000000000
 SCREEN_SIZE = (1280, 720)
 
 font_root = "assets/fonts/"

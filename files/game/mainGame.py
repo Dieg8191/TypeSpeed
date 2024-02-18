@@ -30,7 +30,7 @@ class Game:
 
         self.finished = False
 
-        self.texts = get_texts("basic")[2]
+        self.texts = "hola"
         self.board = Board(self.texts)
 
         pygame.mouse.set_visible(False)

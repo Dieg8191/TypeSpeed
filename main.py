@@ -7,12 +7,15 @@ import pygame
 
 class App:
     def __init__(self) -> None:
+        # Adjust window dpi
         shcore = WinDLL('shcore')
         shcore.SetProcessDpiAwareness(1)
 
+        # Initialize pygame modules
         pygame.init()
         pygame.font.init()
 
+        # Creating thw window
         pygame.display.set_caption(f"Type Speed v{VERSION}")
         self.display = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()

@@ -1,9 +1,11 @@
 from random import choice
 import pygame
-from userconfig import user_config
-from ui import Button
-from files.menu.backgroundKey import BackgroundKey
-from support import Mouse, show_text
+
+from scr.gameUI.button import Button
+from scr.userconfig import user_config
+
+from scr.mainMenu.backgroundKey import BackgroundKey
+from scr.support import Mouse, show_text
 
 
 class Menu:

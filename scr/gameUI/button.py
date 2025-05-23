@@ -1,8 +1,10 @@
-import pygame
-from typing import Callable
 from time import time
-from userconfig import FONTS
-from support import load_image
+from typing import Callable
+
+import pygame
+
+from scr.support import load_image
+from scr.userconfig import FONTS
 
 
 class Button(pygame.sprite.Sprite):
@@ -37,7 +39,3 @@ class Button(pygame.sprite.Sprite):
         if self.timer:
             if time() - self.start_timer_time >= 0.2:
                 self.command()
-
-
-
-

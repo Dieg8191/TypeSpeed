@@ -1,6 +1,6 @@
-from files.game.mainGame import Game
-from files.menu.mainMenu import Menu
-from userconfig import user_config, VERSION
+from scr.game.mainGame import Game
+from scr.mainMenu.mainMenu import Menu
+from scr.userconfig import user_config, VERSION
 from ctypes import WinDLL
 import pygame
 

@@ -1,6 +1,7 @@
 import pygame
 from json import loads
-from userconfig import FONTS
+
+from scr.userconfig import FONTS
 
 
 def show_text(display: pygame.surface.Surface, pos: tuple[int, int], font: str,

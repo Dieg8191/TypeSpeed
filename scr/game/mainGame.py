@@ -1,9 +1,13 @@
 from time import time
 import pygame
 from sys import exit
-from support import show_text, Mouse, get_texts
-from userconfig import user_config
-from files.game.gameUi import Board, PauseMenu, ResultsMenu
+
+from scr.gameUI.pauseMenu import PauseMenu
+
+from scr.game.oneLineBoard import OneLineBoard
+from scr.gameUI.resultsMenu import ResultsMenu
+from scr.support import show_text, Mouse
+from scr.userconfig import user_config
 
 
 class Game:
@@ -30,8 +34,8 @@ class Game:
 
         self.finished = False
 
-        self.texts = "hola"
-        self.board = Board(self.texts)
+        self.texts = ("test1", "test2", "test3")
+        self.board = OneLineBoard(self.texts)#FullScreenBoard(self.texts)
 
         pygame.mouse.set_visible(False)
 
@@ -43,14 +47,15 @@ class Game:
         seconds = time() - self.time_start - self.time_delay
         minutes = seconds / 60
         seconds %= 60
-        show_text(self.display,
-                  (10, 10),
-                  "arial",
-                  50,
-                  "black",
-                  None,
-                  f"Time: {int(minutes)}:{int(seconds) if int(seconds) > 9 else "0" + str(int(seconds))}"
-                  )
+        show_text(
+            self.display,
+            (10, 10),
+            "arial",
+            50,
+            "black",
+            None,
+            f"Time: {int(minutes)}:{int(seconds) if int(seconds) > 9 else "0" + str(int(seconds))}"
+        )
 
         self.time = seconds
 

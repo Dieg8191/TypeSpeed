@@ -1,5 +1,6 @@
 import pickle
 from dataclasses import dataclass
+from os import mkdir
 
 VERSION = "0.3.0"
 
@@ -21,7 +22,7 @@ class UserConfig:
 
 def load_config() -> UserConfig:
     try:
-        with open("data/config.data", "rb") as file:
+        with open("../data/config.data", "rb") as file:
             file = pickle.load(file)
 
     except FileNotFoundError or AttributeError:
@@ -32,8 +33,13 @@ def load_config() -> UserConfig:
 
 
 def save_config(data: UserConfig) -> None:
-    with open("data/config.data", "wb") as file:
-        pickle.dump(data, file)
+    try:
+        with open("../data/config.data", "wb") as file:
+            pickle.dump(data, file)
+    except FileNotFoundError:
+        mkdir("../data")
+        with open("../data/config.data", "wb") as file:
+            pickle.dump(data, file)
 
 
 user_config = load_config()

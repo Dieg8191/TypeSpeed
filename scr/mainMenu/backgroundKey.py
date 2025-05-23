@@ -1,6 +1,6 @@
 import pygame
-from support import load_image
-from userconfig import user_config
+from scr.support import load_image
+from scr.userconfig import user_config
 from time import time
 from random import randint
 
